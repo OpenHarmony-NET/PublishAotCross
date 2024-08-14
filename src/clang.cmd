@@ -8,8 +8,8 @@
 
 set args=%*
 
-rem Works around zlib not being available with zig. This is not great.
-set args=%args:-lz =%
+rem https://github.com/MichalStrehovsky/PublishAotCross/issues/3
+rem zlib is now available
 
 rem Work around a .NET 8 Preview 6 issue
 set args=%args:'-Wl,-rpath,$ORIGIN'=-Wl,-rpath,$ORIGIN%
