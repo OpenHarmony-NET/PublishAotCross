@@ -1,68 +1,42 @@
-name: CI
+name: Build Nuget Packages
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
-
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version to create'     
-        required: true
+    branches: [ main ]
 
 jobs:
-  build_and_test:
-    strategy:
-      matrix:
-        include:
-          - vm: windows-latest
-    runs-on: ${{ matrix.vm }}
-    name: Build and test ${{ matrix.vm }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: '8.0.x'
-          include-prerelease: true
-      - name: Setup zig
-        if: ${{ github.event.inputs.version == '' }}
-        uses: goto-bus-stop/setup-zig@v2
-      - name: Build (CI)
-        if: ${{ github.event.inputs.version == '' }}
-        run: |
-          dotnet build -t:Pack src/PublishAotCross.nuproj
-          dotnet publish -r linux-x64 -c Release test/Hello.csproj -p:StripSymbols=false
-      - name: Upload test binary
-        if: ${{ github.event.inputs.version == '' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: Hello
-          path: test/bin/Release/net8.0/linux-x64/publish/Hello
-      - name: Build (CD)
-        if: ${{ github.event.inputs.version != '' }}
-        run: dotnet build -t:Pack src/PublishAotCross.nuproj -p:Version=${{ github.event.inputs.version }}
-      - name: Archive NuGet
-        if: ${{ github.event.inputs.version != '' }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: PublishAotCross.${{ github.event.inputs.version }}.nupkg
-          path: src/bin/Debug/PublishAotCross.${{ github.event.inputs.version }}.nupkg
-      - name: Create tag
-        if: ${{ github.event.inputs.version != '' && github.actor == 'MichalStrehovsky' }}
-        run: |
-          git tag v${{ github.event.inputs.version }}
-          git push origin v${{ github.event.inputs.version }}
+  build:
 
-  validate:
-    needs: build_and_test
     runs-on: ubuntu-latest
-    name: Try launching
+
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v3
-      - name: Launch
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        filter: tree:0
+    - name: Install .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: pack nugets
+      run: dotnet build -t:Pack src/OpenHarmony.PublishAotCross.nuproj -o ./packages -p:Version=0.0.0-alpha.${{github.run_number}}
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: packages
+        path: packages
+
+  publish-to-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: packages
+          path: packages
+      - name: Push to NuGet
         run: |
-          chmod +x ./Hello/Hello
-          ./Hello/Hello
+          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
