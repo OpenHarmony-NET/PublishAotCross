@@ -49,16 +49,12 @@ jobs:
       with:
         name: packages
         path: build
+        
   publish-to-nuget:
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: packages
-          path: packages
-      - name: Push to NuGet
       - uses: actions/download-artifact@v4
         with:
           name: packages
