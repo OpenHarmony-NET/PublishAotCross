@@ -18,21 +18,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    - name: pack nugets
-      run: dotnet build -t:Pack src/OpenHarmony.NET.PublishAotCross.nuproj -o ./packages -p:Version=0.0.0-alpha.${{github.run_number}}
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: packages
-        path: packages
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        filter: tree:0
-    - name: Install .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+
     - name: Build fake clang
       run: |
         dotnet publish ./clang/clang.csproj -r win-x64 -c Release -o ./package/fakeclang/win-x64
