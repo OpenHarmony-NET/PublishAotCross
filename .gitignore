@@ -13,3 +13,4 @@
 /test/bin
 /test/obj
 /test/*.user
+/package/fakeclang/*

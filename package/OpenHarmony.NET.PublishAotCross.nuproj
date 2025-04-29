@@ -3,46 +3,42 @@
 
 
 
-<Project Sdk="Microsoft.Build.NoTargets">
-	<PropertyGroup>
+	<Project Sdk="Microsoft.Build.NoTargets">
+		<PropertyGroup>
 
-		<TargetFramework>netstandard2.0</TargetFramework>
+			<TargetFramework>netstandard2.0</TargetFramework>
 
-		<PackageId>OpenHarmony.NET.PublishAotCross</PackageId>
-		<Version Condition="'$(Version)' == ''">42.42.42-dev</Version>
-		<Authors>OpenHarmony.NET, xljiulang, Michal Strehovsky</Authors>
-		<Company>OpenHarmony.NET, xljiulang, Michal Strehovsky</Company>
-		<Description>MSBuild targets to aid in crosscompiling Native AOT publishing.</Description>
-		<PackageProjectUrl>https://github.com/OpenHarmony-NET/PublishAotCross</PackageProjectUrl>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
+			<PackageId>OpenHarmony.NET.PublishAotCross</PackageId>
+			<Version Condition="'$(Version)' == ''">42.42.42-dev</Version>
+			<Authors>OpenHarmony.NET, xljiulang, Michal Strehovsky</Authors>
+			<Company>OpenHarmony.NET, xljiulang, Michal Strehovsky</Company>
+			<Description>MSBuild targets to aid in crosscompiling Native AOT publishing.</Description>
+			<PackageProjectUrl>https://github.com/OpenHarmony-NET/PublishAotCross</PackageProjectUrl>
+			<PackageLicenseExpression>MIT</PackageLicenseExpression>
+			<PackageReadmeFile>README.md</PackageReadmeFile>
+		</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="OpenHarmony.NET.PublishAotCross.targets">
-			<Pack>true</Pack>
-			<PackagePath>build</PackagePath>
-		</None>
-		<None Include="Crosscompile.targets">
-			<Pack>true</Pack>
-			<PackagePath>build</PackagePath>
-		</None>
-		<None Include="clang.cmd">
-			<Pack>true</Pack>
-			<PackagePath>build</PackagePath>
-		</None>
-		<None Include="libs/**">
-			<Pack>true</Pack>
-			<PackagePath>build/libs</PackagePath>
-		</None>
-		<None Include="../README.md">
-			<Pack>true</Pack>
-			<PackagePath>/</PackagePath>
-		</None>
-		
-		<None Include="fakeclang/**/*">
-			<Pack>true</Pack>
-			<PackagePath>build/fakeclang</PackagePath>
-		</None>
-	</ItemGroup> 
-</Project>
+		<ItemGroup>
+			<None Include="OpenHarmony.NET.PublishAotCross.targets">
+				<Pack>true</Pack>
+				<PackagePath>build</PackagePath>
+			</None>
+			<None Include="Crosscompile.targets">
+				<Pack>true</Pack>
+				<PackagePath>build</PackagePath>
+			</None>
+			<None Include="libs/**">
+				<Pack>true</Pack>
+				<PackagePath>build/libs</PackagePath>
+			</None>
+			<None Include="../README.md">
+				<Pack>true</Pack>
+				<PackagePath>/</PackagePath>
+			</None>
+			
+			<None Include="fakeclang/**/*">
+				<Pack>true</Pack>
+				<PackagePath>build/fakeclang</PackagePath>
+			</None>
+		</ItemGroup> 
+	</Project>
