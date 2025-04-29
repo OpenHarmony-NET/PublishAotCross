@@ -4,6 +4,23 @@
 		<DisableUnsupportedError>true</DisableUnsupportedError>
 	</PropertyGroup>
 
+	 <PropertyGroup>
+        <!-- 根据当前系统生成 RuntimeIdentifier -->
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('Windows')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture) == 'x64'">win-x64</HostRuntimeIdentifier>
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('Windows')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)== 'arm64'">win-arm64</HostRuntimeIdentifier>
+
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('Linux')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)== 'x64'">linux-x64</HostRuntimeIdentifier>
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('Linux')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)== 'arm64'">linux-arm64</HostRuntimeIdentifier>
+
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('macOS')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)== 'x64'">osx-x64</HostRuntimeIdentifier>
+        <HostRuntimeIdentifier Condition="$([MSBuild]::IsOSPlatform('macOS')) and $([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)== 'arm64'">osx-arm64</HostRuntimeIdentifier>
+    </PropertyGroup>
+	
+	
+    <Target Name="PrintHostRuntimeIdentifier" BeforeTargets="Build">
+        <Message Text="Current Host RuntimeIdentifier:$(HostRuntimeIdentifier)" Importance="High" />
+    </Target>
+
 	<UsingTask TaskName="PrependPath"
 			   TaskFactory="RoslynCodeTaskFactory"
 			   AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
@@ -27,7 +44,7 @@
 	<Target Name="SetPathToClang"
 			BeforeTargets="SetupOSSpecificProps">
 
-		<PrependPath Value="$(MSBuildThisFileDirectory)" />
+		<PrependPath Value="$(MSBuildThisFileDirectory)/fakeclang/$(HostRuntimeIdentifier)" />
 
 	</Target>
 

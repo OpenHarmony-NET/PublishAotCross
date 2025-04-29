@@ -6,3 +6,10 @@
 /test/obj
 /.vs
 /src/bin
+/clang/obj
+/clang/bin
+/clang/*.user
+/test/Properties
+/test/bin
+/test/obj
+/test/*.user

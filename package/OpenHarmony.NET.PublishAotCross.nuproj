@@ -34,5 +34,10 @@
 			<Pack>true</Pack>
 			<PackagePath>/</PackagePath>
 		</None>
+		
+		<None Include="fakeclang/**/*">
+			<Pack>true</Pack>
+			<PackagePath>build/fakeclang</PackagePath>
+		</None>
 	</ItemGroup> 
 </Project>
